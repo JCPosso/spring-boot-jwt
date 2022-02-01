@@ -37,8 +37,10 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return  "name:      " + name + '\n' +
-                "email:     " + email + '\n' +
-                "lastName:  " + lastName + '\n';
+        return "UserDto{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }
