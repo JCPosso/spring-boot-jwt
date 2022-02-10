@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> create( @RequestBody UserDto userDto ) {
-        String id = String.valueOf(userService.getAll().size()+1);
+        String id = "1";
+        List<User> users= userService.getAll();
+        if (users.size()>0){
+             id = String.valueOf(userService.getAll().size()+1);
+        }
         String today = DateTimeFormatter.ofPattern("YYYY-MM-DD").format(LocalDate.now());
         User user = new User(id,userDto,today);
         return ResponseEntity.status(HttpStatus.OK).body(userService.create(user));
@@ -42,8 +47,7 @@ public class UserController {
 
     @PutMapping( "/{id}" )
     public ResponseEntity<User> update(@RequestBody UserDto userDto, @PathVariable String id ) {
-        User user = new User(id,userDto,userService.findById(id).getCreatedAt());
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(user,id));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(userDto,id));
     }
 
     @DeleteMapping( "/{id}" )
@@ -54,5 +58,15 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((false));
         }
+    }
+
+    @GetMapping( "/findUsersWithNameOrLastNameLike/{queryText}" )
+    public ResponseEntity<List<User>> findUsersWithNameOrLastNameLike( @PathVariable String queryText ) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findUsersWithNameOrLastNameLike(queryText));
+    }
+
+    @GetMapping( "/findUsersCreatedAfter/{startDate}" )
+    public ResponseEntity<List<User>> findUsersCreatedAfter( @PathVariable Date startDate ) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findUsersCreatedAfter(startDate));
     }
 }

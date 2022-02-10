@@ -1,14 +1,25 @@
 package edu.eci.ieti.Users.data;
 
 import edu.eci.ieti.Users.dto.UserDto;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public class User {
+
+
+    @Indexed(unique = true)
     private String email;
+
+    @Id
     private String id;
     private String createdAt;
     private String name;
     private String lastName;
 
+    public User(){
+    }
     public String getEmail() {
         return email;
     }
