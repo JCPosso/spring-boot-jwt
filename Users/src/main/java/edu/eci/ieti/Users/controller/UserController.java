@@ -4,6 +4,7 @@ import edu.eci.ieti.Users.data.User;
 import edu.eci.ieti.Users.dto.UserDto;
 import edu.eci.ieti.Users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,24 +31,45 @@ public class UserController {
 
     @GetMapping( "/{id}" )
     public ResponseEntity<User> findById( @PathVariable String id ) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        try {
+            User user = userService.findById(id);
+            return new ResponseEntity<User>(user,headers,HttpStatus.ACCEPTED);
+        } catch  (Exception e) {
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
     public ResponseEntity<User> create( @RequestBody UserDto userDto ) {
-        String id = "1";
-        List<User> users= userService.getAll();
-        if (users.size()>0){
-             id = String.valueOf(userService.getAll().size()+1);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        try {
+            String id = "1";
+            List<User> users= userService.getAll();
+            if (users.size()>0){
+                id = String.valueOf(userService.getAll().size()+1);
+            }
+            String today = DateTimeFormatter.ofPattern("YYYY-MM-DD").format(LocalDate.now());
+            User user = new User(id,userDto,today);
+            return new ResponseEntity<User>(userService.create(user),HttpStatus.OK);
+        }  catch  (Exception e) {
+            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
-        String today = DateTimeFormatter.ofPattern("YYYY-MM-DD").format(LocalDate.now());
-        User user = new User(id,userDto,today);
-        return ResponseEntity.status(HttpStatus.OK).body(userService.create(user));
     }
 
     @PutMapping( "/{id}" )
     public ResponseEntity<User> update(@RequestBody UserDto userDto, @PathVariable String id ) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(userDto,id));
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        try {
+            userService.update(userDto,id);
+            User user = userService.findById(id);
+            return new ResponseEntity<User>(user,HttpStatus.OK);
+        }  catch  (Exception e) {
+            return new ResponseEntity<User>(HttpStatus.NOT_IMPLEMENTED);
+        }
     }
 
     @DeleteMapping( "/{id}" )

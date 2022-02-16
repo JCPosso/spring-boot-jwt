@@ -1,9 +1,13 @@
 package edu.eci.ieti.Users.data;
 
+import edu.eci.ieti.Users.dto.RoleEnum;
 import edu.eci.ieti.Users.dto.UserDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
+import java.util.List;
 
 @Document
 public class User {
@@ -17,9 +21,33 @@ public class User {
     private String createdAt;
     private String name;
     private String lastName;
+    private String passwordHash;
+    private List<RoleEnum> roles;
 
     public User(){
     }
+
+    public User(String id, UserDto user, String createdAt ) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.lastName = user.getLastName();
+        this.passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public List<RoleEnum> getRoles() {
+        return roles;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -42,14 +70,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public User(String id, UserDto user, String createdAt ) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.lastName = user.getLastName();
     }
 
     public String getId() {
@@ -76,6 +96,8 @@ public class User {
                 ", createdAt='" + createdAt + '\'' +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

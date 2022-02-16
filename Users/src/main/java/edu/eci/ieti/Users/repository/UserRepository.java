@@ -16,4 +16,6 @@ public interface UserRepository extends MongoRepository<User, String>
     List<User> findByLastName(String queryText);
 
     List<User> findBycreatedAtAfter(Date startDate);
+
+    User findByEmail(String email);
 }

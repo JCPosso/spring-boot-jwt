@@ -4,9 +4,9 @@ import edu.eci.ieti.Users.data.User;
 import edu.eci.ieti.Users.dto.UserDto;
 import edu.eci.ieti.Users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,14 +45,16 @@ public class UserServiceMongoDB implements UserService {
     }
 
     @Override
-    public User update(UserDto userDto, String id)
+    public void update(UserDto userDto, String id)
     {
         User user = userRepository.findById(id).get();
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
         user.setLastName(userDto.getLastName());
         userRepository.save(user);
-        return null;
+        if (user.getPasswordHash() != null) {
+            user.setPasswordHash(BCrypt.hashpw(user.getPasswordHash(), BCrypt.gensalt()));
+        }
     }
 
     @Override
@@ -63,5 +65,10 @@ public class UserServiceMongoDB implements UserService {
     @Override
     public List<User> findUsersCreatedAfter(Date startDate) {
         return null ;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

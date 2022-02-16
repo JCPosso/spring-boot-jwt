@@ -16,9 +16,11 @@ public interface UserService
 
     void deleteById( String id );
 
-    User update(UserDto userDto, String id);
+    void update(UserDto userDto, String id);
 
     List<User> findUsersWithNameOrLastNameLike(String queryText);
 
     List<User> findUsersCreatedAfter(Date startDate);
+
+    User findByEmail(String email);
 }
