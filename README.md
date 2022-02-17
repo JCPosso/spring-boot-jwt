@@ -512,3 +512,9 @@ public class SecurityConfiguration
       ```properties
          Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MTMwZmMzMWYwNTk2YzE0YzRiOWY5NTMiLCJhZGFfcm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE2MzA2MDAzMjAsImV4cCI6MTYzMDY4NjcyMH0.s29NZMHYDCsCXqj9W9ZajNnlwyzW4qJG832Z3PXhwhk
       ```
+## Autor
+[Juan Camilo Posso Guevara](https://github.com/JCPosso)
+## Derechos de Autor
+**©** _Juan Camilo Posso G., Escuela Colombiana de Ingeniería Julio Garavito._
+## Licencia
+Licencia bajo  GNU General Public License.
