@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Document
@@ -34,6 +36,8 @@ public class User {
         this.email = user.getEmail();
         this.lastName = user.getLastName();
         this.passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        this.roles = new ArrayList<>(Collections.singleton( RoleEnum.USER ));
+
     }
 
     public void setPasswordHash(String passwordHash) {
